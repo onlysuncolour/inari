@@ -1,38 +1,29 @@
-import http from 'http';
+// import https from 'https';
+import fetch from 'node-fetch'
 import { ISampleResp } from './interface';
 
 export const pingChatGPT = (apiKey:string):Promise<ISampleResp> => {
   return new Promise((resolve) => {
-    const options = {
-      hostname: 'api.openai.com',
-      path: '/v1/models',
+    console.log('pingChatGPT', apiKey)
+    fetch('https://api.openai.com/v1/models', {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${apiKey}`,
       }
-    };
-
-    console.log('ping')
-    
-    http.get(options, res => {
-      let data = '';
-    
-      res.on('data', chunk => {
-        data += chunk;
-      });
-    
-      res.on('end', () => {
-        console.log(res)
-        if (res.statusCode === 200) {
-          resolve({ok: true})
-        } else {
-          resolve({ok: false})
-        }
-      });
-    }).on('error', error => {
+    }).then(async response => {
+      const data = await response.json();
+      console.log(data)
+      if (response.status === 200) {
+        resolve({ok: true})
+      } else {
+        resolve({ok: false})
+      }
+    }, (error:Error) => {
       console.log('error', error)
       resolve({ok: false, error: `${error.name} - ${error.message}`})
-    });
+    })
+    
   })
 }
 
