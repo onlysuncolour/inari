@@ -1,7 +1,7 @@
 import chatService from '@/services/chat'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -9,6 +9,6 @@ export default function handler(
     method : reqMethod
   } = req
   if (reqMethod === 'GET') {
-    return chatService.checkChatAvailable()
+    res.send(await chatService.checkChatAvailable())
   }
 }
