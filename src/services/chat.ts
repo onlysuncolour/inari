@@ -1,41 +1,36 @@
-import { Configuration, OpenAIApi } from "openai";
-import { ISampleResp } from "./interface";
-import { pingChatGPT } from "./request";
+// import { Configuration, OpenAIApi } from "openai";
+import chatData from "./chatData";
+import { IChatServiceResp, IChatCompletionParam, IGptModelResp, ISampleResp } from "./interface";
+import { fetchChatCompletion, fetchListChatGPTModels } from "./request";
 
-class ChatService {
-  openAi!: OpenAIApi;
-  apiKey!: string;
-  orgKey!: string;
-  available!: boolean;
-  error?: string;
-  constructor() {
-    this.generateChatInstance();
+export default class ChatService {
+  constructor() { }
+  static getResult (result: ISampleResp): IChatServiceResp {
+    return {ok: result.ok, data: chatData.getClientData()}
   }
-  async generateChatInstance () {
-    const { API_KEY, ORG_KEY } = process.env;
-    this.apiKey = API_KEY as string;
-    this.orgKey = ORG_KEY as string;
-    const configuration = new Configuration({
-      organization: ORG_KEY,
-      apiKey: API_KEY,
-    });
-    this.openAi = new OpenAIApi(configuration);
-    // const result = (await this.checkChatAvailable());
-    // this.available = result.ok
-    // this.error = result.error
+  static async getChatGPTModels (): Promise<IGptModelResp> {
+    const result = await fetchListChatGPTModels({apiKey: chatData.apiKey});
+    if (result.ok) {
+      chatData.models = result.data
+    } else {
+      chatData.models = []
+    }
+    return result
   }
-  async checkChatAvailable ():Promise<ISampleResp> {
-    let result: ISampleResp = {ok: true};
-    if (!this.apiKey || !this.orgKey) {
+  static async checkChatAvailable(): Promise<IChatServiceResp> {
+    let result: IGptModelResp = {ok: true};
+    if (!chatData.apiKey) {
       result = {ok: false, error: 'No API key or organization key'}
     }
     if (result.ok) {
-      result = await pingChatGPT(this.apiKey);
+      result = await this.getChatGPTModels();
     }
-    this.available = result.ok
-    this.error = result.error
+    chatData.available = result.ok
+    chatData.error = result.error
+    return this.getResult(result)
+  }
+  static async makeChatCompletion(body: IChatCompletionParam) {
+    const result = await fetchChatCompletion({apiKey: chatData.apiKey, body})
     return result
   }
 }
-const chatService = new ChatService();
-export default chatService;

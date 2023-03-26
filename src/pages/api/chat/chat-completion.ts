@@ -6,9 +6,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const {
-    method : reqMethod
+    method : reqMethod,
+    body
   } = req
-  if (reqMethod === 'GET') {
-    res.send(await ChatService.checkChatAvailable())
+  if (reqMethod === 'POST') {
+    res.send(await ChatService.makeChatCompletion(body))
   }
 }

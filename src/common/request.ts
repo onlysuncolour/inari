@@ -1,3 +1,5 @@
+import { IChatCompletionBody, IChatCompletionResponse } from "./index.interface";
+
 type TRequestParam = {
   path: string;
   method: 'GET' | 'POST',
@@ -40,5 +42,12 @@ export const fetchCheckChatAvailable = () => {
   return request({
     path: '/api/chat/check-available',
     method: 'GET'
+  })
+}
+export const fetchChatCompletion = (body:IChatCompletionBody):Promise<IChatCompletionResponse> => {
+  return request({
+    path: '/api/chat/chat-completion',
+    method: 'POST',
+    body
   })
 }
