@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pm2": "pm2 start npm --name app1 -- run start -- -p 3000",
-    "pm2:stop": "pm2 kill -a",
+    "pm2": "pm2 start npm --name inari -- run start -- -p 3000",
+    "pm2:stop": "pm2 stop inari",
     "pm2:list": "pm2 list",
-    "pm2:log": "pm2 log"
+    "pm2:log": "pm2 logs inari"
   },
   "dependencies": {
     "antd": "^5.3.2",
