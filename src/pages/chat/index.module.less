@@ -1,3 +1,16 @@
 .root {
-  
+  height: calc(100% - 4rem);
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .inputContainer {
+    height: 7rem;
+    background-color: #fff;
+    padding: 0 1rem;
+    align-content: end;
+  }
 }

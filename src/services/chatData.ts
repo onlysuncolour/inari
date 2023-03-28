@@ -11,6 +11,10 @@ class ChatDataClass {
     this.apiKey = API_KEY as string;
   }
 
+  setAvailable(value:boolean) {
+    this.available = value;
+  }
+
   getClientData() {
     return {
       available: this.available,
@@ -20,6 +24,4 @@ class ChatDataClass {
   }
 
 }
-
-const chatData = new ChatDataClass()
-export default chatData;
+export const chatData = new ChatDataClass()

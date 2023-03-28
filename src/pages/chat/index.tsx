@@ -7,18 +7,19 @@ import { IChatService } from "@/services/interface";
 import { IChatConversion } from "@/common/index.interface";
 import ChatContainer from "@/components/chat/chat-container";
 import ChatInput from "@/components/chat/chat-input";
+import Layout from "@/components/layout";
 type Props = {
   available: boolean,
   error: string | undefined
 }
 export async function getStaticProps() {
-  const result = ChatService.getResult({ok: true}).data as IChatService
-  const available:boolean = result.available || false
-  const error = result.error || 'please click <check available>'
+  // const result = ChatService.getResult({ok: true}).data as IChatService
+  // const available:boolean = result.available || false
+  // const error = result.error || 'please click <check available>'
   return {
     props: {
-      available,
-      error
+      available: true,
+      error: null
     },
   };
 }
@@ -62,14 +63,16 @@ const Chat:FC<Props> = ({
       <Button onClick={checkAvailable} loading={availableLoading}>check available</Button>
     </div>
   }
-  return <div className={styles.chat}>
-    <div className={styles.conversions}>
-      <ChatContainer conversions={conversions} loading={loading} />
+  return <Layout>
+    <div className={styles.root}>
+      {/* <div className={styles.conversions}> */}
+        <ChatContainer className={styles.chat} conversions={conversions} loading={loading} />
+      {/* </div> */}
+      <div className={styles.inputContainer}>
+        <ChatInput loading={loading} onComplete={v => sendChat(v)} />
+      </div>
     </div>
-    <div className={styles.inputContainer}>
-      <ChatInput loading={loading} onComplete={v => sendChat(v)} />
-    </div>
-  </div>
+  </Layout>
   
   // if (chatAvailable) {
   //   return <div>now you can talk</div>

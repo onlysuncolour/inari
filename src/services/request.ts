@@ -1,7 +1,9 @@
 import fetch from 'node-fetch'
-import { IChatCompletionParam, IGptModelResp, IRequestParam, ISampleResp } from './interface';
+import { IChatCompletionParam, IChatCompletionResp, IGptModelResp, IRequestParam, ISampleResp } from './interface';
+import { getMockCompletions, getMockModelList } from './mock';
 
 const host = process.env.HOST || "https://api.openai.com"
+const local = process.env.LOCAL || '0'
 
 export function request({url, apiKey, body, method}: IRequestParam): Promise<ISampleResp> {
   return new Promise((resolve) => {
@@ -26,6 +28,9 @@ export function request({url, apiKey, body, method}: IRequestParam): Promise<ISa
 }
 
 export async function fetchListChatGPTModels({apiKey}: {apiKey: string}): Promise<IGptModelResp>{
+  if (local !== '0') {
+    return {ok: true, data: getMockModelList()}
+  }
   const resp = await request({
     url: `${host}/v1/models`,
     apiKey,
@@ -43,7 +48,11 @@ export async function fetchListChatGPTModels({apiKey}: {apiKey: string}): Promis
   }
 }
 
-export async function fetchChatCompletion({apiKey, body} : {apiKey: string, body: IChatCompletionParam}): Promise<any> {
+export async function fetchChatCompletion(
+  {apiKey, body} : {apiKey: string, body: IChatCompletionParam}): Promise<IChatCompletionResp> {
+  if (local !== '0') {
+    return {ok: true, data: getMockCompletions()}
+  }
   const resp = await request({
     url: `${host}/v1/chat/completions`,
     apiKey,

@@ -1,5 +1,5 @@
 // import { Configuration, OpenAIApi } from "openai";
-import chatData from "./chatData";
+import { chatData } from "./chatData";
 import { IChatServiceResp, IChatCompletionParam, IGptModelResp, ISampleResp } from "./interface";
 import { fetchChatCompletion, fetchListChatGPTModels } from "./request";
 
@@ -25,7 +25,7 @@ export default class ChatService {
     if (result.ok) {
       result = await this.getChatGPTModels();
     }
-    chatData.available = result.ok
+    chatData.setAvailable(result.ok)
     chatData.error = result.error
     return this.getResult(result)
   }

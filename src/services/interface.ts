@@ -53,3 +53,25 @@ export interface IChatCompletionParam {
   messages: IChatCompletionMessage[];
   max_tokens: number;
 }
+
+export interface IChatCompletionDataResp {
+  choices: {
+    finish_reason: string;
+    index: number;
+    message: IChatCompletionMessage
+  }[],
+  created: number;
+  id: string;
+  model: string;
+  object: string;
+  usage: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  }
+}
+export interface IChatCompletionResp {
+  ok: boolean;
+  data?: IChatCompletionDataResp;
+  error?: string
+}
